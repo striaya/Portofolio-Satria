@@ -1,22 +1,26 @@
 // Visualizer musik: batang kecil di player yang bergerak mengikuti lagu.
-// Ubah BARS untuk jumlah batang, W dan H untuk ukuran.
+// Di laptop membaca audio asli. Di HP memakai animasi simulasi (tidak menyentuh audio sama sekali).
 (function () {
   const audio = document.getElementById('bgMusic');
   const player = document.getElementById('musicPlayer');
   const titleEl = document.getElementById('songTitle');
   if (!audio || !player) return;
 
-  const BARS = 14; // jumlah batang
+  const SMALL = window.innerWidth <= 480;
+  const BARS = SMALL ? 10 : 14; // jumlah batang
   const GAP = 2; // jarak antar batang (px)
-  const W = 64; // lebar visualizer (px)
-  const H = 24; // tinggi visualizer (px)
+  const W = SMALL ? 40 : 64; // lebar visualizer (px)
+  const H = SMALL ? 20 : 24; // tinggi visualizer (px)
   const MIN_H = 2; // tinggi batang saat diam (px)
 
   // ---------- tampilan ----------
   const style = document.createElement('style');
   style.textContent =
     '#musicViz { display: block; width: ' + W + 'px; height: ' + H + 'px; flex-shrink: 0; }' +
-    '@media (max-width: 380px) { #musicViz { display: none; } }';
+    '#songTitle { min-width: 0; }' +
+    '@media (max-width: 480px) {' +
+    '  #musicPlayer { gap: 8px; padding-left: 12px; padding-right: 12px; }' +
+    '}';
   document.head.appendChild(style);
 
   const canvas = document.createElement('canvas');
@@ -59,12 +63,17 @@
   let data = null;
   let simulate = false;
 
+  // HP dan layar sentuh: jangan sentuh audio, pakai simulasi saja
+  const isMobile =
+    /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '') ||
+    (window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+
   function setupAudio() {
     if (ctx || simulate) return;
 
-    // Dibuka lewat klik dua kali (file://), browser memblokir pembacaan audio untuk analisis,
-    // dan mencobanya malah bisa membisukan lagu. Jadi di mode ini pakai animasi simulasi.
-    if (location.protocol === 'file:') {
+    // Di HP, atau saat dibuka lewat klik dua kali (file://), pakai animasi simulasi.
+    // Jalur Web Audio bisa bikin suara pelan atau tertahan di kondisi itu.
+    if (isMobile || location.protocol === 'file:') {
       simulate = true;
       return;
     }
