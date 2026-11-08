@@ -517,7 +517,6 @@ const GH_CACHE_MIN = 30; // simpan hasil di browser selama 30 menit (hemat limit
     if (user.created_at) addMeta('fas fa-calendar', 'Bergabung ' + fmtMonth(user.created_at));
     if (user.location) addMeta('fas fa-map-marker-alt', user.location);
     addMeta('fas fa-link', 'github.com/' + (user.login || GH_USER));
-
     setCount('ghRepos', user.public_repos || 0);
     setCount('ghStars', stars);
     setCount('ghFollowers', user.followers || 0);
