@@ -1,8 +1,4 @@
-const songs = [
-  // { src: 'adatitik.mp3', title: 'Ada titik titik di ujung doa' },
-  { src: 'dontlookback.mp3', title: 'Don\'t Look Back Back In Anger' },
-  { src: 'antlantis.mp3', title: 'Atlantis' },
-];
+const songs = (window.SONGS || []).map((s) => ({ src: s.file, title: s.title }));
 
 let currentSong = 0;
 let playing = false;
@@ -12,6 +8,7 @@ const musicBtn = document.getElementById('musicBtn');
 const musicIcon = document.getElementById('musicIcon');
 
 function loadSong(index) {
+  if (!songs.length) return; 
   music.src = songs[index].src;
   music.load();
   document.getElementById('songTitle').textContent = songs[index].title;
