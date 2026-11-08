@@ -59,6 +59,10 @@ const GH_CACHE_MIN = 30; // simpan hasil di browser selama 30 menit (hemat limit
       border-radius: 50%;
       display: block;
     }
+    /* statistik cuma 2 kotak (Repository dan Follower) */
+    #github .astats {
+      grid-template-columns: repeat(2, 1fr);
+    }
     #github .astat {
       background: var(--surface);
     }
@@ -338,7 +342,6 @@ const GH_CACHE_MIN = 30; // simpan hasil di browser selama 30 menit (hemat limit
     '<p id="ghBio"></p>' +
     '<div class="astats">' +
     '<div class="astat"><div class="astn" id="ghRepos" data-count="0">0</div><div class="astl">Repository</div></div>' +
-    '<div class="astat"><div class="astn" id="ghStars" data-count="0">0</div><div class="astl">Bintang</div></div>' +
     '<div class="astat"><div class="astn" id="ghFollowers" data-count="0">0</div><div class="astl">Follower</div></div>' +
     '</div>' +
     '<div class="gh-langs" id="ghLangsBox" style="display:none">' +
@@ -505,7 +508,6 @@ const GH_CACHE_MIN = 30; // simpan hasil di browser selama 30 menit (hemat limit
   function render(data) {
     const user = data.user;
     const own = data.repos.filter(function (r) { return !r.fork; });
-    const stars = own.reduce(function (s, r) { return s + (r.stargazers_count || 0); }, 0);
 
     elName.textContent = user.name || user.login || GH_USER;
     elUser.textContent = '@' + (user.login || GH_USER);
@@ -518,7 +520,6 @@ const GH_CACHE_MIN = 30; // simpan hasil di browser selama 30 menit (hemat limit
     if (user.location) addMeta('fas fa-map-marker-alt', user.location);
     addMeta('fas fa-link', 'github.com/' + (user.login || GH_USER));
     setCount('ghRepos', user.public_repos || 0);
-    setCount('ghStars', stars);
     setCount('ghFollowers', user.followers || 0);
 
     // bahasa
@@ -576,11 +577,6 @@ const GH_CACHE_MIN = 30; // simpan hasil di browser selama 30 menit (hemat limit
       a.appendChild(mk('p', 'pdesc', r.description || 'Belum ada deskripsi untuk repository ini.'));
 
       const stack = mk('div', 'pstack');
-
-      const sStar = mk('span', 'sb');
-      sStar.appendChild(mk('i', 'fas fa-star'));
-      sStar.appendChild(document.createTextNode(String(r.stargazers_count || 0)));
-      stack.appendChild(sStar);
 
       const sDate = mk('span', 'sb');
       sDate.appendChild(mk('i', 'far fa-clock'));
