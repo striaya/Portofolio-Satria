@@ -2,7 +2,7 @@ const tickerMessages = [
   'Tersedia untuk membuat proyek web, aplikasi web, dan mobile',
   'Terbuka untuk kolaborasi proyek web',
   'Hubungi saya lewat form Contact atau WhatsApp',
-  'Satria Henggar Yoselino — Student Software Engineering',
+  'Satria Henggar Yoselino — Software Engineering',
 ];
 const tickerSpeed = 60; // px per detik, makin besar makin cepat
 
